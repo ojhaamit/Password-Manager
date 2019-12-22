@@ -1,9 +1,9 @@
 try:
     from tkinter import *
-    from ttk import *
+    #from ttk import *
 except ImportError:  # Python 3
     from tkinter import *
-    from tkinter.ttk import *
+    #from tkinter.ttk import *
 import sqlite3
 from tkinter import messagebox
 
@@ -12,6 +12,9 @@ root.title("Password Manager")
 root.geometry("500x400")
 root.minsize(600, 400)
 root.maxsize(600, 400)
+
+frame = Frame(root, bg="#80c1ff", bd=5)
+frame.place(relx=0.50, rely=0.50, relwidth=0.98, relheight=0.45, anchor = "n")
 
 #Create Database
 conn = sqlite3.connect("passmanager.db")
@@ -84,10 +87,7 @@ def query():
             p_records += str(record[4])+ " " +str(record[0])+ " " + str(record[1])+ " " + str(record[2]) + " " + str(record[3])+ "\n"
         #print(record)
 
-    global query_label
-    query_label = Label(root, text = p_records)
-    query_label.grid(row=10, column=0, columnspan=2, padx=10, pady=10, ipadx=35)
-
+    query_label['text'] = p_records
     # Commit changes
     conn.commit()
 
@@ -209,7 +209,7 @@ def change():
 
 #Create Function to Hide Records
 def hide():
-    query_label.grid_forget()
+    query_label['text'] = ""
     query_btn.configure(text="Show Records", command=query)
 
 
@@ -254,6 +254,11 @@ delete_btn.grid(row=6, column=0, ipadx=30)
 #Create a Update Button
 update_btn = Button(root, text = "Update Record", command = update)
 update_btn.grid(row=7, column=0, ipadx=30)
+
+#Create a Label to show responses
+global query_label
+query_label = Label(frame, anchor="nw", justify="left")
+query_label.place(relwidth=1, relheight=1)
 
 def main():
     root.mainloop()
