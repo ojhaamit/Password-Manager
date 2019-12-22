@@ -102,9 +102,12 @@ def delete():
 
     #Query the database
     t = delete_id.get()
-    cursor.execute("DELETE FROM manager where oid = " + delete_id.get())
-    delete_id.delete(0, END)
-    messagebox.showinfo("Alert", "Record %s Deleted" %t)
+    if(t!=""):
+        cursor.execute("DELETE FROM manager where oid = " + delete_id.get())
+        delete_id.delete(0, END)
+        messagebox.showinfo("Alert", "Record %s Deleted" %t)
+    else:
+        messagebox.showinfo("Alert", "Please enter record id to delete!")
 
     # Commit changes
     conn.commit()
@@ -114,60 +117,64 @@ def delete():
 
 #Create Function to Update A Record
 def update():
-    global edit
-    edit = Tk()
-    edit.title("Update Record")
-    edit.geometry("500x400")
-    edit.minsize(450, 300)
-    edit.maxsize(450, 300)
-
-    #Global variables
-    global app_name_edit, url_edit, email_id_edit, password_edit
-
-    # Create Text Boxes
-    app_name_edit = Entry(edit, width=30)
-    app_name_edit.grid(row=0, column=1, padx=20)
-    url_edit = Entry(edit, width=30)
-    url_edit.grid(row=1, column=1, padx=20)
-    email_id_edit = Entry(edit, width=30)
-    email_id_edit.grid(row=2, column=1, padx=20)
-    password_edit = Entry(edit, width=30)
-    password_edit.grid(row=3, column=1, padx=20)
-
-    # Create Text Box Labels
-    app_name_label_edit = Label(edit, text="Application Name:")
-    app_name_label_edit.grid(row=0, column=0)
-    url_label_edit = Label(edit, text="URL:")
-    url_label_edit.grid(row=1, column=0)
-    email_id_label_edit = Label(edit, text="Email Id:")
-    email_id_label_edit.grid(row=2, column=0)
-    password_label_edit = Label(edit, text="Password:")
-    password_label_edit.grid(row=3, column=0)
-
-    # Create Save Button
-    submit_btn_edit = Button(edit, text="Save Record", command=change)
-    submit_btn_edit.grid(row=4, column=0, columnspan=2, pady=5, padx=15, ipadx=135)
-
-    # connect to database
-    conn = sqlite3.connect("passmanager.db")
-    cursor = conn.cursor()
-
-    # Query the database
     t = update_id.get()
-    cursor.execute("SELECT * FROM manager where oid = " + update_id.get())
-    records = cursor.fetchall()
+    if(t!=""):
+        global edit
+        edit = Tk()
+        edit.title("Update Record")
+        edit.geometry("500x400")
+        edit.minsize(450, 300)
+        edit.maxsize(450, 300)
 
-    for record in records:
-        app_name_edit.insert(0, record[0])
-        url_edit.insert(0, record[1])
-        email_id_edit.insert(0, record[2])
-        password_edit.insert(0, record[3])
+        #Global variables
+        global app_name_edit, url_edit, email_id_edit, password_edit
 
-    # Commit changes
-    conn.commit()
+        # Create Text Boxes
+        app_name_edit = Entry(edit, width=30)
+        app_name_edit.grid(row=0, column=1, padx=20)
+        url_edit = Entry(edit, width=30)
+        url_edit.grid(row=1, column=1, padx=20)
+        email_id_edit = Entry(edit, width=30)
+        email_id_edit.grid(row=2, column=1, padx=20)
+        password_edit = Entry(edit, width=30)
+        password_edit.grid(row=3, column=1, padx=20)
 
-    # Close connection
-    conn.close()
+        # Create Text Box Labels
+        app_name_label_edit = Label(edit, text="Application Name:")
+        app_name_label_edit.grid(row=0, column=0)
+        url_label_edit = Label(edit, text="URL:")
+        url_label_edit.grid(row=1, column=0)
+        email_id_label_edit = Label(edit, text="Email Id:")
+        email_id_label_edit.grid(row=2, column=0)
+        password_label_edit = Label(edit, text="Password:")
+        password_label_edit.grid(row=3, column=0)
+
+        # Create Save Button
+        submit_btn_edit = Button(edit, text="Save Record", command=change)
+        submit_btn_edit.grid(row=4, column=0, columnspan=2, pady=5, padx=15, ipadx=135)
+
+        # connect to database
+        conn = sqlite3.connect("passmanager.db")
+        cursor = conn.cursor()
+
+        # Query the database
+        cursor.execute("SELECT * FROM manager where oid = " + update_id.get())
+        records = cursor.fetchall()
+
+        for record in records:
+            app_name_edit.insert(0, record[0])
+            url_edit.insert(0, record[1])
+            email_id_edit.insert(0, record[2])
+            password_edit.insert(0, record[3])
+
+        # Commit changes
+        conn.commit()
+
+        # Close connection
+        conn.close()
+
+    else:
+        messagebox.showinfo("Alert", "Please enter record id to update!")
 
 #Create function to save update records
 def change():
